@@ -1,0 +1,14 @@
+# Create full conda environment for development, including some useful tools
+name: GES-XML
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.8
+  - pip
+  - pip:
+    - pandas>=1.4.3
+    - lxml>=4.9.0
+    - cryptography>=37.0.2
+    - pyOpenSSL>=22.0.0
+    - openpyxl>=3.0.10
+    - numpy
