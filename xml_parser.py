@@ -2,17 +2,17 @@ from os import listdir
 from os.path import isfile, isdir, abspath, join
 from lxml import objectify
 from typing import List, Tuple
-from pandas import DataFrame, ExcelWriter, concat
+from pandas import DataFrame, concat
 
 
 class SeparatorError(Exception):
-    """
+    '''
     Exception rised when an invalid field separator is detected
 
         Attributes:
         -----------
         separator(str): Separator value
-    """
+    '''
 
     def __init__(self, separator:str, *args: object) -> None:
         super().__init__(*args)
@@ -32,6 +32,7 @@ class XML_converter():
         ----------------------
             folderpath (str): path to the folder containing the .xml files to parse (with the .xml or .XML extension)
             separator (str): Separator to be used during the parsing operation of the node fields (default: '|')
+            concat_symbol (str): Symbol used to concatenate field associated with equivalent branches (default: ' & ')
     '''
 
     def __init__(self, folderpath: str, separator: str = "|", concat_symbol: str = " & ") -> None:
