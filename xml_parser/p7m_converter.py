@@ -70,9 +70,10 @@ def group_convert_p7m_to_xml(source_folder: str, destination_folder: str = None,
             try:
                 p7m_to_xml(p7m_path, xml_path)
 
-            except:
+            except Exception as e:
                 if verbose == True:
                     print(""" -> Parsing '{}': \u001b[31;1mFAILED\u001b[0m""".format(filename))
+                    print("\t{}".format(e))
             
             #else:
             #    if verbose == True:
