@@ -1,7 +1,9 @@
 from os import listdir, mkdir
 from os.path import isfile, isdir, abspath, join
+from base64 import b64decode
 from OpenSSL import crypto
 from OpenSSL._util import (ffi as _ffi, lib as _lib,)
+
 
 def p7m_to_xml(p7m_path: str, xml_path: str) -> None:
     '''
@@ -21,14 +23,22 @@ def p7m_to_xml(p7m_path: str, xml_path: str) -> None:
     with open(p7m_path, 'rb') as p7m_file:
         p7m_data = p7m_file.read()
     
+    try:
+        p7m = crypto.load_pkcs7_data(crypto.FILETYPE_ASN1, p7m_data)
     
-    p7m = crypto.load_pkcs7_data(crypto.FILETYPE_ASN1, p7m_data)
+    except:
+        buffer = b64decode(p7m_data)
+        p7m = crypto.load_pkcs7_data(crypto.FILETYPE_ASN1, buffer)
 
     bio_out =crypto._new_mem_buf()
     res = _lib.PKCS7_verify(p7m._pkcs7, _ffi.NULL, _ffi.NULL, _ffi.NULL, bio_out, _lib.PKCS7_NOVERIFY|_lib.PKCS7_NOSIGS)
 
+
     if res == 1:
-        data = crypto._bio_to_string(bio_out).decode("utf-8")
+        try:
+            data = crypto._bio_to_string(bio_out).decode("utf-8")
+        except UnicodeDecodeError:
+            data = crypto._bio_to_string(bio_out).decode("windows-1252")
 
         with open(xml_path, 'w') as xml_file:
             xml_file.write(data)
@@ -78,8 +88,3 @@ def group_convert_p7m_to_xml(source_folder: str, destination_folder: str = None,
             #else:
             #    if verbose == True:
             #        print(""" -> Parsing '{}': \u001b[32;1mSUCCESS\u001b[0m""".format(filename))
-
-
-
-    
-

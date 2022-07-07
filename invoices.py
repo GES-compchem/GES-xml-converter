@@ -1,3 +1,4 @@
+import sys
 from os.path import join, abspath
 from pandas import ExcelWriter
 from xml_parser.xml_parser import XML_converter
@@ -18,7 +19,10 @@ readline.set_completer(complete)
 
 if __name__ == "__main__":
 
-    path = input("Please select the path to the .xml and .xml.p7m files\n> ")
+    if len(sys.argv) == 1:
+        path = input("Please select the path to the .xml and .xml.p7m files\n> ")
+    else:
+        path = sys.argv[1]
 
     path = abspath(path)
 
@@ -26,7 +30,7 @@ if __name__ == "__main__":
     group_convert_p7m_to_xml(path, join(path), verbose=True)
 
     print("Parsing .xml files")
-    parser = XML_converter(path)
+    parser = XML_converter(path, separator='#@#', concat_symbol='|')
     parser.load(starting_with="FatturaElettronica")
     parser.inflate_tree(filler="-")
     df = parser.get_pandas_dataset(offset=1)

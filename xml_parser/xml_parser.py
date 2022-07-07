@@ -180,7 +180,7 @@ class XML_converter():
         lmin, lmax = None, None
         for stringlist in self.dataset.values():
             for string in stringlist:
-                nlayers = string.count("|")
+                nlayers = string.count(self.separator)
                 lmin = nlayers if lmin==None else min(lmin, nlayers)
                 lmax = nlayers if lmax==None else max(lmax, nlayers)
         
