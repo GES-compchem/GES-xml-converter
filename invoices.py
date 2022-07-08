@@ -1,9 +1,9 @@
 import sys
-from os.path import join, abspath
+from os.path import join, abspath, isdir
 from pandas import ExcelWriter
 from xml_parser.xml_parser import XML_converter
 from xml_parser.p7m_converter import group_convert_p7m_to_xml
-
+from xml_parser.bytesIO_utils import path_to_BytesIO
 
 # Rudimental autocomplete on tab functions
 import glob, readline
@@ -26,11 +26,20 @@ if __name__ == "__main__":
 
     path = abspath(path)
 
+    if isdir(path) == False:
+        raise ValueError
+    
     print("Converting .xml.p7m files to .xml")
-    group_convert_p7m_to_xml(path, join(path), verbose=True)
+    p7m_streams = path_to_BytesIO(path, extension=".xml.p7m")
+    p7m_conv_streams = group_convert_p7m_to_xml(p7m_streams, verbose=True)
 
     print("Parsing .xml files")
-    parser = XML_converter(path, separator='#@#', concat_symbol='|')
+    xml_streams = path_to_BytesIO(path, extension=".xml")
+
+    for key, stream in p7m_conv_streams.items():
+        xml_streams[key] = stream
+    
+    parser = XML_converter(xml_streams, separator='#@#', concat_symbol='|')
     parser.load(starting_with="FatturaElettronica")
     parser.inflate_tree(filler="-")
     df = parser.get_pandas_dataset(offset=1)
