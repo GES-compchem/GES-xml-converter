@@ -1,9 +1,9 @@
 from io import BytesIO
 from os import listdir
 from os.path import isdir, isfile, abspath, join
-from typing import Dict
+from typing import Dict, Tuple
 
-def path_to_BytesIO(source: str, extension: str = None) -> Dict[str, BytesIO]:
+def path_to_BytesIO(source: str, extension: Tuple[str] or str = None) -> Dict[str, BytesIO]:
     '''
     This function converts a path to a file o a path to a folder containing more than one file,
     in a dictionary of BytesIO data ordered by a key equal to the filename.

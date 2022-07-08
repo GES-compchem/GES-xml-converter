@@ -2,7 +2,7 @@ from io import BytesIO
 from base64 import b64decode
 from OpenSSL import crypto
 from OpenSSL._util import (ffi as _ffi, lib as _lib,)
-from typing import Dict
+from typing import Callable, Dict
 
 
 def p7m_to_xml(p7m_stream: BytesIO) -> BytesIO:
@@ -32,7 +32,7 @@ def p7m_to_xml(p7m_stream: BytesIO) -> BytesIO:
 
     if res != 1:
         raise RuntimeError
-
+    
     try:
         data = crypto._bio_to_string(bio_out).decode("utf-8")
     except UnicodeDecodeError:
@@ -41,15 +41,17 @@ def p7m_to_xml(p7m_stream: BytesIO) -> BytesIO:
     return BytesIO(data.encode('utf-8'))
 
 
-def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False) -> Dict[str, BytesIO]:
+def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False, exception_handler: Callable[[Exception, str], None] = None) -> Dict[str, BytesIO]:
     '''
     Converts all the .xml.p7m file contained into a 'source_folder' to a regular .xml file in a 'destination_folder'.
 
         Parameters:
         -----------
             instream (Dict[str, BytesIO]): Dictionary of BytesIO stream, ordered by filename, containing
-                the .xml.p7m to be converted
-            verbose (bool): If set to True will report the success of the conversion process on terminal
+                the .xml.p7m to be converted.
+            verbose (bool): If set to True will report the success of the conversion process on terminal.
+            exception_handler (Callable[[Exception, str], None]): function taking as arguments the exception
+                occurred and the filename, capable of handling a .p7m conversion exception.
         
         Returns:
         --------
@@ -72,12 +74,14 @@ def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False
         try:
             buffer = p7m_to_xml(stream)
 
-        except Exception as e:
-            if verbose == True:
-                print(""" -> Parsing '{}': \u001b[31;1mFAILED\u001b[0m""".format(filename))
-                print("\t{}".format(e))
+        except Exception as exception:
+            if exception_handler != None:
+                exception_handler(exception, filename)
             else:
-                raise Exception
+                if verbose == True:
+                    print(""" -> Parsing '{}': \u001b[31;1mFAILED\u001b[0m""".format(filename))
+                    print("\t{}".format(exception))
+
         else:
             outstream[newname] = buffer
 

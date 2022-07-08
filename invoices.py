@@ -4,6 +4,7 @@ from pandas import ExcelWriter
 from xml_parser.xml_parser import XML_converter
 from xml_parser.p7m_converter import group_convert_p7m_to_xml
 from xml_parser.bytesIO_utils import path_to_BytesIO
+from GES_invoices_utils.header_modifier import modify_header
 
 # Rudimental autocomplete on tab functions
 import glob, readline
@@ -34,7 +35,8 @@ if __name__ == "__main__":
     p7m_conv_streams = group_convert_p7m_to_xml(p7m_streams, verbose=True)
 
     print("Parsing .xml files")
-    xml_streams = path_to_BytesIO(path, extension=".xml")
+    xml_streams = path_to_BytesIO(path, extension=(".xml", ".XML"))
+    
 
     for key, stream in p7m_conv_streams.items():
         xml_streams[key] = stream
@@ -43,6 +45,14 @@ if __name__ == "__main__":
     parser.load(starting_with="FatturaElettronica")
     parser.inflate_tree(filler="-")
     df = parser.get_pandas_dataset(offset=1)
+
+    df, new_labels = modify_header(df)
+
+    if new_labels != {}:
+        print("\nWARNING: new labels must be added to the lookup table")
+        for key, element in new_labels.items():
+            print("\t{} -> {}".format(key, element))
+        print('\n')
 
     print("Exporting .xlsx file")
     excel_file = join(path, "parsed_xml_data.xlsx")
