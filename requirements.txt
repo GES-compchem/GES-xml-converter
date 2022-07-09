@@ -1,0 +1,7 @@
+pandas>=1.4.3
+lxml>=4.9.0
+cryptography>=37.0.2
+pyOpenSSL>=22.0.0
+openpyxl>=3.0.10
+streamlit>=1.10.0
+numpy
