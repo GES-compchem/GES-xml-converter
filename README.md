@@ -1,5 +1,5 @@
 # GES-xml-converter
-![Tests](https://github.com/GES-ppravatto/GES-xml-converter/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/GES-compchem/GES-xml-converter/actions/workflows/tests.yml/badge.svg)
 
 This repo contains a simple python parser for XML files. An example script (`invoices.py`), capable of converting Italian electronic invoices to a `.xlsx` formatted table, is provided together with a simple streamlit-based GUI (`invoices_gui.py`).
 
