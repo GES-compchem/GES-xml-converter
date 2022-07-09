@@ -163,7 +163,7 @@ DEFAULT_LOOKUP_TABLE = {
 }   
         
         
-def modify_header(df: DataFrame, filler: str = " ", lookup_table: Dict[str, str] = None) -> Tuple[DataFrame, Dict[str, str]]:
+def modify_header(df: DataFrame, filler: str = " ", lookup_table: Dict[str, str] = {}) -> Tuple[DataFrame, Dict[str, str]]:
     '''
     This function simplifies the dataframe header by substitution with a pre-defiend lookup table.
 
@@ -178,9 +178,9 @@ def modify_header(df: DataFrame, filler: str = " ", lookup_table: Dict[str, str]
     '''
     
     header = []
-    new_labels = {}
+    new_labels: Dict[str, str] = {}
 
-    if lookup_table == None:
+    if lookup_table == {}:
         lookup_table = DEFAULT_LOOKUP_TABLE
     
     for signature in df.columns:

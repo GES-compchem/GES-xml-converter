@@ -4,7 +4,7 @@ from pandas import ExcelWriter
 from xml_parser.xml_parser import XML_converter
 from xml_parser.p7m_converter import group_convert_p7m_to_xml
 from xml_parser.bytesIO_utils import path_to_BytesIO
-from GES_invoices_utils.header_modifier import modify_header
+from xml_parser.invoices_modifier import modify_header
 
 # Rudimental autocomplete on tab functions
 import glob, readline

@@ -1,9 +1,10 @@
 from io import BytesIO
 from os import listdir
 from os.path import isdir, isfile, abspath, join
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 
-def path_to_BytesIO(source: str, extension: Tuple[str] or str = None) -> Dict[str, BytesIO]:
+
+def path_to_BytesIO(source: str, extension: Union[Tuple[str], str] = "") -> Dict[str, BytesIO]:
     '''
     This function converts a path to a file o a path to a folder containing more than one file,
     in a dictionary of BytesIO data ordered by a key equal to the filename.
@@ -11,19 +12,21 @@ def path_to_BytesIO(source: str, extension: Tuple[str] or str = None) -> Dict[st
         Parameters:
         -----------
         source (str): String containing the path to the file or the folder
-        extension(str): Extension of the file to be processes (default: None)
+        extension(str): Extension of the file to be processes (default: "")
 
         Returns:
         --------
             dataset (Dict[BytesIO]): Dictionary of BytesIO of the selected files ordered by filename
     '''
+    if source == "" or source == None:
+        raise ValueError
 
     dataset = {}
     path = abspath(source)
 
     if isdir(path):
         for filename in listdir(path):
-            if extension != None:
+            if extension != "":
                 if filename.endswith(extension) == False:
                     continue
 
@@ -33,7 +36,7 @@ def path_to_BytesIO(source: str, extension: Tuple[str] or str = None) -> Dict[st
 
     elif isfile(path):
         filename = path.split("/")[-1]      #Linux only
-        if extension != None:
+        if extension != "":
             if path.endswith(extension) == False:
                 raise ValueError
         with open(path, 'rb') as file:
@@ -43,5 +46,3 @@ def path_to_BytesIO(source: str, extension: Tuple[str] or str = None) -> Dict[st
         raise ValueError
     
     return dataset
-
-

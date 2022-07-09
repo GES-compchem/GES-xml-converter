@@ -5,6 +5,18 @@ from OpenSSL._util import (ffi as _ffi, lib as _lib,)
 from typing import Callable, Dict
 
 
+def default_exception_handler(exception: Exception, filename: str) -> None:
+    '''
+    Default exception handler used to print decoding exception on terminal
+        Parameters:
+        -----------
+            exception (Exception): The occurred exception
+            filename (str): The name of the file causing the exception
+    '''
+    print(""" -> Parsing '{}': \u001b[31;1mFAILED\u001b[0m""".format(filename))
+    print("\t{}".format(exception))
+
+
 def p7m_to_xml(p7m_stream: BytesIO) -> BytesIO:
     '''
     Convert a .xml.p7m BytesIO stream into a regular .xml BytesIO stream.
@@ -41,7 +53,7 @@ def p7m_to_xml(p7m_stream: BytesIO) -> BytesIO:
     return BytesIO(data.encode('utf-8'))
 
 
-def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False, exception_handler: Callable[[Exception, str], None] = None) -> Dict[str, BytesIO]:
+def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False, exception_handler: Callable[[Exception, str], None] = default_exception_handler) -> Dict[str, BytesIO]:
     '''
     Converts all the .xml.p7m file contained into a 'source_folder' to a regular .xml file in a 'destination_folder'.
 
@@ -75,12 +87,11 @@ def group_convert_p7m_to_xml(instream: Dict[str, BytesIO], verbose: bool = False
             buffer = p7m_to_xml(stream)
 
         except Exception as exception:
-            if exception_handler != None:
-                exception_handler(exception, filename)
-            else:
+            if exception_handler == default_exception_handler:
                 if verbose == True:
-                    print(""" -> Parsing '{}': \u001b[31;1mFAILED\u001b[0m""".format(filename))
-                    print("\t{}".format(exception))
+                    exception_handler(exception, filename)
+            else:
+                exception_handler(exception, filename)
 
         else:
             outstream[newname] = buffer

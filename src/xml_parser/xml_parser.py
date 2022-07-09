@@ -1,6 +1,6 @@
 from io import BytesIO
 from lxml import objectify
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Union
 from pandas import DataFrame, concat
 
 
@@ -46,7 +46,7 @@ class XML_converter():
         if concat_symbol == separator:
             raise ValueError
 
-        self.dataset = {}
+        self.dataset: Dict[str, List[str]] = {}
         self.instream = instream
         self.separator = separator
         self.concat_symbol = concat_symbol
@@ -112,7 +112,7 @@ class XML_converter():
             if a in skip:
                 continue
             
-            buffer = []
+            buffer: List[str] = []
             branch_a = self.separator.join(string_a.split(self.separator)[0:-1])
 
             for b, string_b in enumerate(strings[a+1::]):
@@ -133,7 +133,7 @@ class XML_converter():
         return pruned_strings
     
 
-    def load(self, starting_with: str = None) -> None:
+    def load(self, starting_with: str = "") -> None:
         '''
         Loads the .xml files contained in the instream BytesIO dictionary. Each branch of the .xml tree
         is linearized in data fields and the data related to identical branches are united in a single field. A starting
@@ -141,7 +141,7 @@ class XML_converter():
 
             Parameters:
             -----------
-                starting_with (str): starting condition to select a subset of the first tag layer (default: None)
+                starting_with (str): starting condition to select a subset of the first tag layer (default: "")
         '''
         for filename, stream in self.instream.items():
           
@@ -245,7 +245,7 @@ class XML_converter():
         for name in self.dataset:
 
             data = []
-            header = [[] for _ in range(lmin+1)]
+            header: List[List[str]] = [[] for _ in range(lmin+1)]
 
             for string in self.dataset[name]:
 
