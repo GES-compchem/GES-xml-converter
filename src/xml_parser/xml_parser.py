@@ -171,12 +171,12 @@ class XML_converter():
                 lmin, lmax (Tuple[int, int]): The minimum and maximum branch lengths 
         '''
 
-        lmin, lmax = None, None
+        lmin, lmax = -1, -1
         for stringlist in self.dataset.values():
             for string in stringlist:
                 nlayers = string.count(self.separator)
-                lmin = nlayers if lmin==None else min(lmin, nlayers)
-                lmax = nlayers if lmax==None else max(lmax, nlayers)
+                lmin = nlayers if lmin==-1 else min(lmin, nlayers)
+                lmax = nlayers if lmax==-1 else max(lmax, nlayers)
         
         return lmin, lmax
     
