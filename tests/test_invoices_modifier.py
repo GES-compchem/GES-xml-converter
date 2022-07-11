@@ -1,5 +1,6 @@
+from io import BytesIO
 from pandas import DataFrame
-from xml_parser.invoices_modifier import modify_header
+from xml_parser.invoices_modifier import modify_header, get_default_lookup_table, convert_to_lookup_table, DEFAULT_LOOKUP_TABLE
 
 # Test modify with DEFAULT_LOOKUP_TABLE
 def test_modify_header_default():
@@ -51,3 +52,15 @@ def test_modify_header_custom_with_filler():
 
     assert result.equals(expected)
     assert new_labels == {}
+
+
+# Test get_default_lookup_table and convert_to_lookup_table functions by cross-checking
+def test_lookup_table_functions_by_crosscheck():
+    
+    table = get_default_lookup_table()    
+    assert type(table) == BytesIO
+
+    result = convert_to_lookup_table(table)
+    assert type(result) == dict
+
+    assert result == DEFAULT_LOOKUP_TABLE

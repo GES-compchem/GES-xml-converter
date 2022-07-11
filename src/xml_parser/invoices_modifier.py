@@ -236,6 +236,6 @@ def convert_to_lookup_table(instream: BytesIO) -> Dict[str, str]:
         sline = line.strip('\n').split(":")
         if len(sline) != 2:
             raise ValueError
-        table[sline[0]] = sline[1]
+        table[sline[0].strip(' ')] = sline[1].strip(' ')
 
     return table
