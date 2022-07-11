@@ -1,6 +1,6 @@
 from io import BytesIO
 from pandas import DataFrame
-from xml_parser.invoices_modifier import modify_header, get_default_lookup_table, convert_to_lookup_table, DEFAULT_LOOKUP_TABLE
+from ges_xml_converter.invoices_modifier import modify_header, get_default_lookup_table, convert_to_lookup_table, DEFAULT_LOOKUP_TABLE
 
 # Test modify with DEFAULT_LOOKUP_TABLE
 def test_modify_header_default():

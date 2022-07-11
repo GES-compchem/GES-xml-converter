@@ -1,8 +1,8 @@
 from io import BytesIO
 from pandas import ExcelWriter
-from xml_parser.xml_parser import XML_converter, SeparatorError
-from xml_parser.p7m_converter import group_convert_p7m_to_xml
-from xml_parser.invoices_modifier import modify_header, get_default_lookup_table, convert_to_lookup_table
+from ges_xml_converter.xml_parser import XML_converter, SeparatorError
+from ges_xml_converter.p7m_converter import group_convert_p7m_to_xml
+from ges_xml_converter.invoices_modifier import modify_header, get_default_lookup_table, convert_to_lookup_table
 
 import streamlit as st
 

@@ -1,10 +1,10 @@
 import sys
 from os.path import join, abspath, isdir
 from pandas import ExcelWriter
-from xml_parser.xml_parser import XML_converter
-from xml_parser.p7m_converter import group_convert_p7m_to_xml
-from xml_parser.bytesIO_utils import path_to_BytesIO
-from xml_parser.invoices_modifier import modify_header
+from ges_xml_converter.xml_parser import XML_converter
+from ges_xml_converter.p7m_converter import group_convert_p7m_to_xml
+from ges_xml_converter.bytesIO_utils import path_to_BytesIO
+from ges_xml_converter.invoices_modifier import modify_header
 
 # Rudimental autocomplete on tab functions
 import glob, readline
