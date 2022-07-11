@@ -2,7 +2,7 @@ import pytest
 from io import BytesIO
 from lxml import objectify
 from pandas import DataFrame
-from xml_parser.xml_parser import XML_converter
+from ges_xml_converter.xml_parser import XML_converter
 
 
 # Test if exceptions are correctly raised by the constructor

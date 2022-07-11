@@ -3,7 +3,7 @@ from io import BytesIO
 from os.path import isdir
 from random import choice
 from string import ascii_letters
-from xml_parser.bytesIO_utils import path_to_BytesIO
+from ges_xml_converter.bytesIO_utils import path_to_BytesIO
 
 
 def random_string(length):

@@ -1,3 +1,4 @@
+from io import BytesIO, TextIOWrapper
 from typing import Dict, Tuple
 from pandas import DataFrame
 
@@ -197,3 +198,44 @@ def modify_header(df: DataFrame, filler: str = " ", lookup_table: Dict[str, str]
     df.columns = header         #Verify if pandas offers a more convenient header changer
     
     return df, new_labels
+
+
+def get_default_lookup_table() -> BytesIO:
+    '''
+    This function returns a standardized BytesIO stream containing the DEFAULT_LOOKUP_TABLE
+        
+        Returns:
+        --------
+            data (BytesIO): BytesIO stream encoding the DEFAULT_LOOKUP_TABLE
+    '''
+    
+    table = ""
+    for key, label in DEFAULT_LOOKUP_TABLE.items():
+        table += "{}: {}\n".format(key, label)
+    
+    return BytesIO(table.encode('utf-8'))
+
+
+def convert_to_lookup_table(instream: BytesIO) -> Dict[str, str]:
+    '''
+    This function converts a standardized BytesIO stream encoding a lookup table to a valid lookup table dictionary
+        
+        Parameters:
+        -----------
+            instream (BytesIO): BytesIO stream encoding the custom lookup-table
+
+        Returns:
+        --------
+            table (Dict[str, str]): Dictionary containing the custom lookup-table
+    '''
+
+    
+    table = {}
+    textstream = TextIOWrapper(instream)
+    for line in textstream:
+        sline = line.strip('\n').split(":")
+        if len(sline) != 2:
+            raise ValueError
+        table[sline[0].strip(' ')] = sline[1].strip(' ')
+
+    return table

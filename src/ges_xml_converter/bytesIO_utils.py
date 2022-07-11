@@ -1,6 +1,6 @@
 from io import BytesIO
 from os import listdir
-from os.path import isdir, isfile, abspath, join
+from os.path import isdir, isfile, abspath, join, basename, normpath
 from typing import Dict, Tuple, Union
 
 
@@ -35,7 +35,7 @@ def path_to_BytesIO(source: str, extension: Union[Tuple[str], str] = "") -> Dict
                 dataset[filename] = BytesIO(file.read())
 
     elif isfile(path):
-        filename = path.split("/")[-1]      #Linux only
+        filename = basename(normpath(path))
         if extension != "":
             if path.endswith(extension) == False:
                 raise ValueError
